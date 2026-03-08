@@ -5,4 +5,4 @@ dateStart: "05/01/2022"
 dateEnd: "Present"
 ---
 
-Led a team delivering pharmaceutical translation projects in a fast-paced client-facing environment.
+Managed a high-volume portfolio of pharmaceutical translation projects, leading a client-facing team under tight regulatory and deadline constraints.
