@@ -13,13 +13,13 @@ repoURL: "https://github.com/oliverbirchill/portfolio"
 
 ## Overview
 
-This is the site you're on right now. Beyond being a place to showcase my work, building it was deliberate, hands-on practice in using the theoretical knowledge I'd learnt in studying for my AWS Certified Cloud Practitioner exam. 
+This is the site you're on right now. Building it was deliberate, hands-on practice in using the theoretical knowledge I'd learnt in studying for my AWS Certified Cloud Practitioner exam, as well as a place to showcase my work. 
 
 ---
 
 ## Tech Stack & Why
 
-**Astro** was the obvious choice for a content-focused static site. It ships zero JavaScript by default, which means excellent Lighthouse scores out of the box and no unnecessary complexity. As content is just markdown, it's super easy to update pages with new projects and blog posts as needed.
+**Astro** was the my first choice for a content-focused static site. It ships zero JavaScript by default, which means excellent Lighthouse scores and no unnecessary complexity. As content is just markdown, it's really easy to update pages with new projects and blog posts as needed.
 
 I wanted to use **S3 + CloudFront** over something like Vercel or Netlify so I got actual practice deploying website infrastructure. Managed platforms like these are convenient, but they abstract away the infrastructure; manually deploying the infrastructure meant I got practice using AWS. 
 
