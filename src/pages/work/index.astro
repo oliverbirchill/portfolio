@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import { dateRange } from "@lib/utils";
 import { WORK } from "@consts";
 
 const collection = (await getCollection("work"))
@@ -18,34 +17,39 @@ const work = await Promise.all(
 
 <PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
   <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black dark:text-white">
-        Work
-      </div>
-      <ul class="flex flex-col space-y-4">
+    <div class="page-shell">
+      <header class="page-header">
+        <div class="page-kicker">
+          <span class="site-kicker-mark">//</span>
+          <span>Work</span>
+        </div>
+        <h1 class="page-title">Work</h1>
+      </header>
+      <div class="timeline-list">
         { 
           work.map(entry => (
-            <li class="animate">
-              <div class="text-sm opacity-75">
-                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+            <article class="timeline-entry">
+              <div class="timeline-dates" aria-label={`Date range for ${entry.data.company}`}>
+                <span>
+                  {entry.data.dateStart.toLocaleString("en-US", { month: "short" })} {entry.data.dateStart.getFullYear()}
+                </span>
+                <span>
+                  {typeof entry.data.dateEnd === "string"
+                    ? entry.data.dateEnd
+                    : `${entry.data.dateEnd.toLocaleString("en-US", { month: "short" })} ${entry.data.dateEnd.getFullYear()}`}
+                </span>
               </div>
-              <div class="font-semibold text-black dark:text-white">
-                {entry.data.company}
+              <div class="timeline-copy">
+                <h2 class="timeline-company">{entry.data.company}</h2>
+                <p class="timeline-role">{entry.data.role}</p>
+                <div class="timeline-description">
+                  <entry.Content />
+                </div>
               </div>
-              <div class="text-sm opacity-75">
-                {entry.data.role}
-              </div>
-              <article>
-                <entry.Content />
-              </article>
-            </li>
+            </article>
           ))
         }
-      </ul>
-<!-- 
-      <ul class="animate flex flex-col gap-4">
-
-      </ul> -->
+      </div>
     </div>
   </Container>
 </PageLayout>

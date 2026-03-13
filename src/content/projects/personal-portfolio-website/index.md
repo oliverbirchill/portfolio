@@ -1,13 +1,12 @@
 ---
 title: "Personal Portfolio Website"
-description: "Personal portfolio site built with Astro, deployed to AWS S3 + CloudFront via GitHub Actions."
+description: "Personal portfolio site built with Astro, deployed to AWS S3 & CloudFront via GitHub Actions."
 date: "Mar 8 2026"
 demoURL: "oliverbirchill.co.uk"
 repoURL: "https://github.com/oliverbirchill/portfolio"
 ---
 
 **Stack:** Astro · AWS S3 · CloudFront · GitHub Actions  
-**Type:** Personal project  
 
 ---
 
@@ -37,11 +36,11 @@ The big tradeoff here is considerably more setup as I had to configure the S3 bu
 
 Deployments are fully automated via a GitHub Actions workflow that triggers on every push to `main`. The pipeline:
 
-1. Checks out the repository
-2. Configures AWS credentials from repository secrets
-3. Installs dependencies and runs `astro build`
-4. Syncs the `dist/` output to S3 with `aws s3 sync --delete` (the `--delete` flag ensures removed pages don't linger)
-5. Creates a CloudFront invalidation on `/*` so the CDN immediately serves the new build
+ - Checks out the repository
+ - Configures AWS credentials from repository secrets
+ - Installs dependencies and runs `astro build`
+ - Syncs the `dist/` output to S3 with `aws s3 sync --delete` (the `--delete` flag ensures removed pages don't linger)
+ - Creates a CloudFront invalidation on `/*` so the CDN immediately serves the new build
 
 AWS credentials are scoped to a least-privilege IAM policy — the GitHub Actions user can only do `s3:PutObject`, `s3:ListBucket`, `s3:DeleteObject`, and `cloudfront:CreateInvalidation` and absolutely nothing else. This was a deliberate security decision: if the credentials were ever exposed, the threat actor is limited to only deploying objects within this bucket. 
 

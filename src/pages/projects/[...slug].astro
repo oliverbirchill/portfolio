@@ -20,48 +20,76 @@ type Props = CollectionEntry<"projects">;
 
 const project = Astro.props;
 const { Content } = await project.render();
+const stackLine = project.body.match(/\*\*Stack:\*\*\s*([^\r\n]+)/i)?.[1] ?? "";
+const stack = stackLine
+  .replaceAll("\u00C2", "")
+  .split(/\s*\u00B7\s*/u)
+  .map(item => item.trim())
+  .filter(Boolean);
+const projectType = project.body.match(/\*\*Type:\*\*\s*([^\r\n]+)/i)?.[1]?.trim() ?? "";
+const hasMetadata = stack.length > 0 || !!projectType;
 ---
 
 <PageLayout title={project.data.title} description={project.data.description}>
   <Container>
-    <div class="animate">
+    <div class="page-shell project-detail-shell">
       <BackToPrev href="/projects">
         Back to projects
       </BackToPrev>
-    </div>
-    <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
+
+      <header class="project-detail-header">
+        <div class="project-detail-meta-line">
           <FormattedDate date={project.data.date} />
-        </div>
-        &bull;
-        <div class="font-base text-sm">
+          <span>&middot;</span>
           {readingTime(project.body)}
         </div>
-      </div>
-      <div class="animate text-2xl font-semibold text-black dark:text-white">
-        {project.data.title}
-      </div>
-      {(project.data.demoURL || project.data.repoURL) && (
-        <nav class="animate flex gap-1">
-          {project.data.demoURL && (
-            <Link href={project.data.demoURL} external>
-              live
-            </Link>
-          )}
-          {project.data.demoURL && project.data.repoURL && (
-            <span>/</span>
-          )}
-          {project.data.repoURL && (
-            <Link href={project.data.repoURL} external>
-              repo
-            </Link>
-          )}
-        </nav>
+        <h1 class="project-detail-title">{project.data.title}</h1>
+        <p class="project-detail-summary">{project.data.description}</p>
+        {(project.data.demoURL || project.data.repoURL) && (
+          <nav class="project-detail-links" aria-label="Project links">
+            {project.data.demoURL && (
+              <Link href={project.data.demoURL} external class="project-detail-link" underline={false}>
+                live
+              </Link>
+            )}
+            {project.data.repoURL && (
+              <Link href={project.data.repoURL} external class="project-detail-link" underline={false}>
+                repo
+              </Link>
+            )}
+          </nav>
+        )}
+      </header>
+
+      <hr class="project-detail-rule" />
+
+      {hasMetadata && (
+        <>
+          <div class="project-metadata-row">
+            {stack.length > 0 && (
+              <div class="project-metadata-field">
+                <span class="project-metadata-label">Stack</span>
+                <div class="project-metadata-pills" aria-label="Project stack">
+                  {stack.map((item) => (
+                    <span class="project-metadata-pill">{item}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {projectType && (
+              <div class="project-metadata-field">
+                <span class="project-metadata-label">Type</span>
+                <span class="project-metadata-value">{projectType}</span>
+              </div>
+            )}
+          </div>
+          <hr class="project-detail-rule project-detail-rule-tight" />
+        </>
       )}
+
+      <article class:list={["detail-content", "project-detail-content", { "project-detail-has-metadata": hasMetadata }]}>
+        <Content />
+      </article>
     </div>
-    <article class="animate">
-      <Content />
-    </article>
   </Container>
 </PageLayout>

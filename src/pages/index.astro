@@ -1,10 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import Link from "@components/Link.astro";
-import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
 
 /*
@@ -33,103 +29,466 @@ const work = await Promise.all(
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <Container>
-    <h4 class="animate font-semibold text-black dark:text-white">
-      Oliver Birchill
-    </h4>
-    <div class="space-y-16">
-      <section>
-        <article class="space-y-4">
-          <p class="animate">
-            Self-taught engineer in the middle of a career change. Actively building skills across Cloud (AWS), Cybersecurity, Data, AI, and Software Engineering.
-          </p>
-        </article>
-      </section>
+  <style is:global>
+    :root {
+      --font-sans-home: "DM Sans", sans-serif;
+      --font-mono-home: "JetBrains Mono", monospace;
+    }
 
-      <!--
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Latest posts
-          </h5>
-          <Link href="/blog">
-            See all posts
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {blog.map(post => (
-            <li>
-              <ArrowCard entry={post} />
-            </li>
-          ))}
-        </ul>
-      </section>
-      -->
+    body:has(.home-shell) > header,
+    body:has(.home-shell) > footer {
+      display: none;
+    }
 
-      <section class="animate space-y-6 border-t border-black/10 dark:border-white/10 pt-16">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Recent projects
-          </h5>
-          <Link href="/projects">
-            See all projects
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {projects.map(project => (
-            <li>
-              <ArrowCard entry={project} />
-            </li>
-          ))}
-        </ul>
-      </section>
+    body:has(.home-shell) > main {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  </style>
 
-      <section class="animate space-y-6 border-t border-black/10 dark:border-white/10 pt-16">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Work Experience
-          </h5>
-          <Link href="/work">
-            See all work
-          </Link>
+  <div class="home-shell">
+    <nav class="home-nav" aria-label="Primary">
+      <a class="home-logo" href="/" aria-label="Oliver Birchill home">
+        <span>OB</span><span class="home-logo-dot">.</span>
+      </a>
+      <div class="home-nav-links">
+        <a href="/work">work</a>
+        <a href="/projects">projects</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <p class="hero-eyebrow">~/oliver-birchill</p>
+      <p class="hero-bio">
+        Self-taught engineer in the middle of a career change. Actively building skills across Cloud (AWS), Cybersecurity, Data, AI, and Software Engineering.
+      </p>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2><span class="section-slash">//</span>Projects</h2>
+        <a href="/projects">see all →</a>
+      </div>
+
+      <div class="projects-scroll">
+        <div class="projects-track">
+          {projects.map((project, index) => {
+            const stackLine = project.body.match(/\*\*Stack:\*\*\s*([^\r\n]+)/i)?.[1] ?? "";
+            const stack = stackLine
+              .replaceAll("\u00C2", "")
+              .split(/\s*\u00B7\s*/u)
+              .map(item => item.trim())
+              .filter(Boolean);
+
+            return (
+              <a class="project-card" href={`/projects/${project.slug}/`}>
+                <div class="project-thumb">
+                  <span class="project-number">{String(index + 1).padStart(2, "0")}</span>
+                  <!-- TODO: replace with screenshot <img> -->
+                  <span class="project-placeholder">{project.data.title}</span>
+                </div>
+                <div class="project-body">
+                  <h3>{project.data.title}</h3>
+                  <p>{project.data.description}</p>
+                  <ul class="project-stack" aria-label={`${project.data.title} stack`}>
+                    {stack.map(item => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </a>
+            );
+          })}
         </div>
-        <ul class="flex flex-col space-y-4">
-          {work.map(entry => (
-            <li>
-              <div class="text-sm opacity-75">
-                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-              </div>
-              <div class="font-semibold text-black dark:text-white">
-                {entry.data.company}
-              </div>
-              <div class="text-sm opacity-60">
-                {entry.data.role}
-              </div>
-              <article class="leading-relaxed">
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2><span class="section-slash">//</span>Work</h2>
+        <a href="/work">see all →</a>
+      </div>
+
+      <div class="work-list">
+        {work.map((entry, index) => (
+          <article class:list={["work-entry", { "work-entry-last": index === work.length - 1 }]}>
+            <div class="work-dates" aria-label={`Date range for ${entry.data.company}`}>
+              <span>
+                {entry.data.dateStart.toLocaleString("en-US", { month: "short" })} {entry.data.dateStart.getFullYear()}
+              </span>
+              <span>
+                {typeof entry.data.dateEnd === "string"
+                  ? entry.data.dateEnd
+                  : `${entry.data.dateEnd.toLocaleString("en-US", { month: "short" })} ${entry.data.dateEnd.getFullYear()}`}
+              </span>
+            </div>
+            <div class="work-copy">
+              <h3>{entry.data.company}</h3>
+              <p class="work-role">{entry.data.role}</p>
+              <div class="work-description">
                 <entry.Content />
-              </article>
-            </li>
-          ))}
-        </ul>
-      </section>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
 
-      <section class="animate space-y-4 border-t border-black/10 dark:border-white/10 pt-16">
-        <ul class="flex flex-wrap gap-2">
-          {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                {SOCIAL.NAME}
-              </Link>
-              {"/"}
-            </li>
-          ))}
-          <li class="line-clamp-1">
-            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
-              {SITE.EMAIL}
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </div>
-  </Container>
+    <footer class="home-footer">
+      <div class="home-footer-links">
+        {SOCIALS.map((social, index) => (
+          <Fragment>
+            {index > 0 && <span class="footer-separator" aria-hidden="true">■</span>}
+            <a href={social.HREF} target="_blank" rel="noreferrer" aria-label={`${SITE.NAME} on ${social.NAME}`}>
+              {social.NAME}
+            </a>
+          </Fragment>
+        ))}
+        <span class="footer-separator" aria-hidden="true">■</span>
+        <a href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
+          email
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <style>
+    .home-shell {
+      --home-bg: var(--background, Canvas);
+      --home-surface: var(--surface, color-mix(in srgb, Canvas 96%, CanvasText 4%));
+      --home-text: var(--foreground, CanvasText);
+      --home-muted: var(--muted, color-mix(in srgb, CanvasText 58%, Canvas 42%));
+      --home-border: var(--border, color-mix(in srgb, CanvasText 12%, Canvas 88%));
+      width: min(100%, 680px);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      color: var(--home-text);
+      font-family: var(--font-sans-home);
+      font-weight: 400;
+    }
+
+    .home-shell :global(a) {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .home-nav,
+    .section-header,
+    .work-entry,
+    .home-footer-links {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .home-nav {
+      margin-bottom: 3.5rem;
+    }
+
+    .home-logo {
+      font-family: var(--font-mono-home);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .home-logo-dot,
+    .hero-eyebrow,
+    .section-slash,
+    .project-number,
+    .footer-separator {
+      color: var(--accent);
+    }
+
+    .home-nav-links {
+      display: flex;
+      gap: 1.1rem;
+    }
+
+    .home-nav-links a {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--home-muted);
+    }
+
+    .home-nav-links a:hover,
+    .section-header a:hover,
+    .home-footer a:hover {
+      color: var(--home-text);
+    }
+
+    .hero {
+      margin-bottom: 3.5rem;
+    }
+
+    .hero-eyebrow,
+    .section-header h2,
+    .section-header a,
+    .project-number,
+    .project-placeholder,
+    .project-stack li,
+    .work-dates,
+    .home-footer a,
+    .footer-separator {
+      font-family: var(--font-mono-home);
+    }
+
+    .hero-eyebrow {
+      margin-bottom: 1rem;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-title {
+      display: grid;
+      gap: 0;
+      margin: 0 0 1.5rem;
+      font-size: 42px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title-light {
+      font-weight: 300;
+    }
+
+    .hero-title span:last-child {
+      font-weight: 500;
+    }
+
+    .hero-bio {
+      max-width: 460px;
+      margin: 0;
+      padding-left: 1rem;
+      border-left: 2px solid var(--accent);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--home-muted);
+    }
+
+    .home-section + .home-section {
+      margin-top: 2.75rem;
+    }
+
+    .section-header {
+      gap: 1rem;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 0.5px solid var(--home-border);
+    }
+
+    .section-header h2 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--home-muted);
+    }
+
+    .section-slash {
+      margin-right: 6px;
+    }
+
+    .section-header a {
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--home-muted);
+    }
+
+    .projects-scroll {
+      overflow-x: auto;
+      margin: 0 -1.5rem;
+      padding: 0 1.5rem;
+      scrollbar-width: none;
+    }
+
+    .projects-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .projects-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      padding: 0;
+    }
+
+    .project-card {
+      width: 240px;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 1px solid var(--home-border);
+      background: var(--home-bg);
+      transition: border-color 0.15s;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+    }
+
+    .project-thumb {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 120px;
+      border-bottom: 1px solid var(--home-border);
+      background: var(--home-surface);
+    }
+
+    .project-number {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 9px;
+      letter-spacing: 0.05em;
+    }
+
+    .project-placeholder {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--home-muted);
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .project-body {
+      padding: 12px 14px 14px;
+    }
+
+    .project-body h3,
+    .work-copy h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .project-body p {
+      margin: 0.45rem 0 0.65rem;
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.55;
+      color: var(--home-muted);
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .project-stack li {
+      padding: 2px 7px;
+      border: 0.5px solid var(--home-border);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--home-muted);
+    }
+
+    .work-list {
+      display: grid;
+    }
+
+    .work-entry {
+      gap: 1.5rem;
+      padding: 1.1rem 0;
+      border-bottom: 0.5px solid var(--home-border);
+    }
+
+    .work-entry-last {
+      border-bottom: 0;
+    }
+
+    .work-dates {
+      display: grid;
+      min-width: 72px;
+      padding-top: 3px;
+      font-size: 10px;
+      line-height: 1.6;
+      color: var(--home-muted);
+      white-space: nowrap;
+    }
+
+    .work-copy {
+      flex: 1;
+    }
+
+    .work-role {
+      margin: 0.2rem 0 0.45rem;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--home-muted);
+    }
+
+    .work-description {
+      max-width: none;
+      font-family: var(--font-sans-home);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--home-muted);
+    }
+
+    .work-description :global(p) {
+      margin: 0;
+    }
+
+    .home-footer {
+      margin-top: 3rem;
+      padding-top: 1.25rem;
+      border-top: 0.5px solid var(--home-border);
+    }
+
+    .home-footer-links {
+      justify-content: flex-start;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .home-footer a {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--home-muted);
+    }
+
+    .footer-separator {
+      font-size: 8px;
+      line-height: 1;
+    }
+
+    @media (max-width: 640px) {
+      .home-shell {
+        padding-top: 1.5rem;
+      }
+
+      .home-nav,
+      .section-header,
+      .work-entry {
+        flex-direction: column;
+      }
+
+      .home-nav,
+      .section-header {
+        gap: 0.75rem;
+      }
+
+      .work-entry {
+        gap: 0.5rem;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+    }
+  </style>
 </PageLayout>
