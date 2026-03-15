@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="130" viewBox="0 0 240 130" role="img" aria-labelledby="title desc">
+  <title id="title">Personal portfolio website thumbnail</title>
+  <desc id="desc">A miniature preview of the portfolio homepage showing the OB. nav, ~/oliver-birchill eyebrow, bio block with red left border, and the //Projects section header.</desc>
+
+  <!-- Page background -->
+  <rect width="240" height="130" fill="#F7F4EF"/>
+
+  <!-- Nav: OB. logo -->
+  <text x="16" y="22" fill="#1F1B18" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="700" letter-spacing="0.04em">OB</text>
+  <text x="30.5" y="22" fill="#C0392B" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="700">.</text>
+
+  <!-- Nav: links (right-aligned) -->
+  <text x="198" y="22" fill="#8C847F" font-family="'JetBrains Mono', monospace" font-size="6.5" font-weight="500" letter-spacing="0.1em">WORK</text>
+  <text x="224" y="22" fill="#8C847F" font-family="'JetBrains Mono', monospace" font-size="6.5" font-weight="500" letter-spacing="0.1em" text-anchor="end">PROJECTS</text>
+
+  <!-- Hero eyebrow -->
+  <text x="16" y="42" fill="#C0392B" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="400" letter-spacing="0.05em">~/oliver-birchill</text>
+
+  <!-- Bio left-border accent -->
+  <rect x="16" y="51" width="2" height="36" fill="#C0392B"/>
+
+  <!-- Bio text lines -->
+  <text x="23" y="62" fill="#8C847F" font-family="'DM Sans', sans-serif" font-size="7" font-weight="300">Self-taught engineer in the middle of a</text>
+  <text x="23" y="73" fill="#8C847F" font-family="'DM Sans', sans-serif" font-size="7" font-weight="300">career change. Building skills across</text>
+  <text x="23" y="84" fill="#8C847F" font-family="'DM Sans', sans-serif" font-size="7" font-weight="300">Cloud, Security, Data &amp; Engineering.</text>
+
+  <!-- Section divider -->
+  <line x1="16" y1="101" x2="224" y2="101" stroke="#1F1B18" stroke-width="0.5" stroke-opacity="0.14"/>
+
+  <!-- //Projects section header -->
+  <text x="16" y="113" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="700" letter-spacing="0.14em">
+    <tspan fill="#C0392B">//</tspan><tspan fill="#8C847F">PROJECTS</tspan>
+  </text>
+  <text x="224" y="113" fill="#8C847F" font-family="'JetBrains Mono', monospace" font-size="7" letter-spacing="0.04em" text-anchor="end">see all →</text>
+</svg>

@@ -4,7 +4,6 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
-import BackToPrev from "@components/BackToPrev.astro";
 import Link from "@components/Link.astro";
 
 export async function getStaticPaths() {
@@ -33,9 +32,10 @@ const hasMetadata = stack.length > 0 || !!projectType;
 <PageLayout title={project.data.title} description={project.data.description}>
   <Container>
     <div class="page-shell project-detail-shell">
-      <BackToPrev href="/projects">
-        Back to projects
-      </BackToPrev>
+      <a href="/projects" class="project-detail-back-link">
+        <span class="project-detail-back-link-icon" aria-hidden="true">&larr;</span>
+        <span>Back to projects</span>
+      </a>
 
       <header class="project-detail-header">
         <div class="project-detail-meta-line">
@@ -92,4 +92,50 @@ const hasMetadata = stack.length > 0 || !!projectType;
       </article>
     </div>
   </Container>
+
+  <style>
+    .project-detail-shell {
+      gap: 1rem;
+    }
+
+    .project-detail-back-link {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .project-detail-back-link:hover {
+      color: var(--foreground);
+    }
+
+    .project-detail-back-link-icon {
+      margin-right: 6px;
+      color: var(--accent);
+    }
+
+    .project-detail-title {
+      font-size: 28px;
+    }
+
+    .project-detail-summary {
+      margin-bottom: 1rem;
+      padding: 0 0 0 1rem;
+    }
+
+    .project-detail-links {
+      margin-bottom: 1rem;
+    }
+
+    .project-detail-rule,
+    .project-detail-rule-tight {
+      margin: 1rem 0;
+    }
+  </style>
 </PageLayout>

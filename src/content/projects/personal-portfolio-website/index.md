@@ -18,9 +18,9 @@ This is the site you're on right now. Building it was deliberate, hands-on pract
 
 ## Tech Stack & Why
 
-**Astro** was the my first choice for a content-focused static site. It ships zero JavaScript by default, which means excellent Lighthouse scores and no unnecessary complexity. As content is just markdown, it's really easy to update pages with new projects and blog posts as needed.
+**Astro** was the my first choice for a content-focused static site. It uses zero JavaScript so less unnecessary complexity and good lighthouse performance scores. As content is just markdown, it's really easy to update pages with new projects and blog posts as needed.
 
-I wanted to use **S3 + CloudFront** over something like Vercel or Netlify so I got actual practice deploying website infrastructure. Managed platforms like these are convenient, but they abstract away the infrastructure; manually deploying the infrastructure meant I got practice using AWS. 
+I wanted to use **S3 + CloudFront** over something like Vercel or Netlify so I got actual practice deploying website infrastructure. While I know managed platforms like these are convenient, they abstract away the infrastructure; manually deploying the infrastructure meant I got practice using AWS. 
 
 Going with S3 and CloudFront meant:
 
