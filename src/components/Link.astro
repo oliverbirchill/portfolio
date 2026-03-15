@@ -5,9 +5,10 @@ type Props = {
   href: string;
   external?: boolean;
   underline?: boolean;
+  class?: string;
 }
 
-const { href, external, underline = true, ...rest } = Astro.props;
+const { href, external, underline = true, class: className, ...rest } = Astro.props;
 const normalizedHref =
   external && !/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(href) ? `https://${href}` : href;
 ---
@@ -16,7 +17,7 @@ const normalizedHref =
   href={normalizedHref} 
   target={ external ? "_blank" : "_self" } 
   rel={external ? "noopener noreferrer" : undefined}
-  class={cn("site-link", underline && "site-link-underlined")}
+  class={cn("site-link", underline && "site-link-underlined", className)}
   {...rest}>
   <slot/>
 </a>
